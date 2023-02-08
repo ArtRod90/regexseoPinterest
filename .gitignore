@@ -1,0 +1,11 @@
+src/
+vendor/
+node_modules/
+.env
+package-lock.json
+package.json
+Thumbs.db
+*.zip
+*.docx
+*.txt
+gulpfile.js

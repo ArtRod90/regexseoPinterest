@@ -1,0 +1,1 @@
+<h1 class="text-light"><?php echo s($titulo) ?></h1>
