@@ -53,6 +53,12 @@ class Imagenes extends ActiveRecord{
         return $resultado;
     }
 
+     public static function allcarga() {
+        $query = "SELECT * FROM " . static::$tabla . " WHERE aprobado ='S';";
+        $resultado = self::consultarSQL($query);
+        return $resultado;
+    }
+
      public static function alldashAdministrador() {
         $query = "SELECT * FROM " . static::$tabla . " LIMIT 20";
         $resultado = self::consultarSQL($query);

@@ -110,7 +110,7 @@ class DashboardController{
      if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         
-        $fotos = Imagenes::alldash();
+        $fotos = Imagenes::allcarga();
         $usuario = Usuarios::where("id", $_SESSION["id"]);
         $favoritas = Favoritas::belongsTo("iduser", $_SESSION["id"]);
         $numerofavoritas = Favoritas::all();
