@@ -65,7 +65,8 @@ class AdminController{
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $usuariofoto = Usuarios::where("id", $_POST["idusuario"]);
             $usuariofoto->advertencias = intval($usuariofoto->advertencias) + 1;            
-            
+            $fotosfavoritas = new Favoritas();
+
             $foto = Imagenes::where("id", $_POST["id"]);
             $favoritas = Favoritas::belongsTo("idimagenes", $foto->id);
 
@@ -75,7 +76,7 @@ class AdminController{
                     $f[] = $value->id;
                 }
                
-                $foto->Eliminarfavoritas($f);
+                $fotosfavoritas->Eliminarfavoritas($f);
             }
 
             $emai = new Email($usuariofoto->email, $usuariofoto->name, $usuariofoto->token);
@@ -281,41 +282,63 @@ public static function ban()
    $resultado = $banned->guardar();
 
    if ($resultado) {
-
-
     $favoritas = Favoritas::belongsTo("iduser",$_POST["id"]);
     foreach ($favoritas as $key => $value) {
       $f[] = $value->id;
   }
+
+  if (count($f) > 0) {
+    $usuariofavoritas->Eliminarfavoritas($f); 
 
     $imagenes = Imagenes::belongsTo("usersid",$_POST["id"]);
     foreach ($imagenes as $key => $value) {
       $I[] = $value->id;
   }
 
-  if (count($f) > 0) {
-    $usuariofavoritas->Eliminarfavoritas($f); 
   
-  }
   if (count($I) > 0) {
-    $usuarioimagenes->EliminarFotos($I);
+    
     foreach ($imagenes as $key => $value) {
         unlink($_SERVER["DOCUMENT_ROOT"] . $value->url );
     }
+    $usuarioimagenes->EliminarFotos($I);
+  }
+   
+   }else{
+
+    $imagenes = Imagenes::belongsTo("usersid",$_POST["id"]);
+    foreach ($imagenes as $key => $value) {
+      $I[] = $value->id;
+  }
+
+  
+  if (count($I) > 0) {
+    
+    foreach ($imagenes as $key => $value) {
+        unlink($_SERVER["DOCUMENT_ROOT"] . $value->url );
+    }
+    $usuarioimagenes->EliminarFotos($I);
+  }
+   }
+
+  if($usuario->imagen === null || $usuario->imagen === ""){
+    $usuario->eliminar();
+  }else{
+    
+    unlink($_SERVER["DOCUMENT_ROOT"] . $usuario->imagen );
+    $usuario->eliminar();
     
   }
 
-  if($usuario->imagen != null || $usuario->imagen != ""){
-    unlink($_SERVER["DOCUMENT_ROOT"] . $usuario->imagen );
-  }
 
+  
     $respuesta = [
         "tipo" => "success",
         "mensaje" => "the user has been successfully banned",
-        "id" => $usuario->id
+        "id" => $_POST["id"]
     ];
 
-    $usuario->eliminar();
+    
    }else{
     $respuesta = [
         "tipo" => "error",

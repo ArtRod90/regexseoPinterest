@@ -14,6 +14,7 @@ class DashboardController{
     {
      session_start();
      isAuth();
+    //  phpinfo(); exit;
      $alertas = []; 
      $fotos = Imagenes::alldash(); 
      $favoritas = Favoritas::belongsTo("iduser", $_SESSION["id"]);
@@ -36,7 +37,7 @@ class DashboardController{
         $f = [];
         $alertas = []; 
         $favoritas = Favoritas::belongsTo("iduser", $_SESSION["id"]);
-       debuguear($favoritas);
+    //    debuguear($favoritas);
         foreach ($favoritas as $key => $value) {
             $f[] = $value->idimagenes;
         }
@@ -190,6 +191,7 @@ class DashboardController{
                         if ($imagenes->url === null && strlen($imagenes->Titulo) > 0 && !empty($imagenes->usersid)) {
                             $obtenerurl = Imagenes::where("id",$imagenes->id);
                             $imagenes->url = $obtenerurl->url;
+                            $imagenes->aprobado = $obtenerurl->aprobado;
                             $imagenes->Titulo = trim($imagenes->Titulo);
                             $imagenes->descripcion = trim($imagenes->descripcion);
                             // debuguear($imagenes);
